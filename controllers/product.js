@@ -6,6 +6,60 @@ const order_model = require('../models/order');
 const slug = require('../method/slug');
 const path = require('path');
 const fs = require('fs');
+
+exports.findProductsByGender = (req, res)=>{
+	if (!req.params.gender) {
+      	return res.json({
+        	success: false,
+        	msg: 'Vui lòng nhập giới tính.'
+      	});
+    }
+    model.find({"gender.slug": req.params.gender}).exec((err, data)=>{
+	    if (err) {
+	      	return res.json({
+	        	success: false,
+	        	msg: err
+	      	});
+	    }
+	    if(data.length<=0){
+	    	return res.json({
+	        	success: false,
+	        	msg: 'Không có sản phẩm.'
+	      	});
+	    }
+	    return res.json({
+	    	success: true,
+	    	data: data
+	  	});
+	});
+}
+exports.findProductsByUse = (req, res)=>{
+	if (!req.params.name) {
+      	return res.json({
+        	success: false,
+        	msg: 'Vui lòng nhập công dụng.'
+      	});
+    }
+    model.find({tag_array:(req.params.name)}).exec((err, data)=>{
+	    if (err) {
+	      	return res.json({
+	        	success: false,
+	        	msg: err
+	      	});
+	    }
+	    if(data.length<=0){
+	    	return res.json({
+	        	success: false,
+	        	msg: 'Không có sản phẩm.'
+	      	});
+	    }
+	    return res.json({
+	    	success: true,
+	    	data: data
+	  	});
+	});
+}
+
 exports.mostLikes = (req, res)=>{
 	model.find({}).sort({likes: -1, created_at:-1}).limit(4).exec((err, products)=>{
 		if(err){
@@ -180,9 +234,6 @@ exports.update = (req, res)=>{
 		product.image = req.body.txtImage || product.image;
 		product.category = req.body.sltCategory || product.category;
 		product.brand = req.body.sltBrand || product.brand;
-		// product.author= req.body.sltAuthor || product.author,
-		product.writer_name = req.body.txtFullName || product.writer_name,
-		product.writer_slug = slug.MakeSeoTitle(req.body.txtFullName) || product.writer_slug,
 		product.price = req.body.txtPrice || product.price;
 		product.promotion_price = (req.body.txtPromotionPrice ? req.body.txtPromotionPrice : 
 									(req.body.txtPrice ? req.body.txtPrice : product.promotion_price)) ;
@@ -211,8 +262,14 @@ exports.add = (req, res)=>{
 		image: req.body.txtImage,
 		category: req.body.sltCategory,
 		brand: req.body.sltBrand,
-		writer_name: req.body.txtFullName,
-		writer_slug: slug.MakeSeoTitle(req.body.txtFullName),
+		tag_array: req.body.txtUseArray,
+		image_Detail: req.body.imageDetail,
+		gender:{
+			name: req.body.txtGender,
+			slug: slug.MakeSeoTitle(req.body.txtGender)
+		},
+		color: req.body.txtColor,
+		size: req.body.txtSize,
 		price: req.body.txtPrice,
 		promotion_price: req.body.txtPromotionPrice || req.body.txtPrice,
 		stockitems: req.body.txtStockItems
@@ -593,7 +650,15 @@ exports.getNameImage = (req, res)=>{
     }
     return res.sendFile(path.join(__dirname,`../public/uploads/products/${req.params.name}`));
 }
-
+exports.getDetailNameImage = (req, res)=>{
+    if(!req.params.name){
+        return res.json({
+            success: false,
+            msg: 'Vui lòng nhập tên ảnh.'
+        }); 
+    }
+    return res.sendFile(path.join(__dirname,`../public/uploads/detail-products/${req.params.name}`));
+}
 exports.deleteImage = (req, res)=>{
 	if(!req.params.name){
         return res.json({

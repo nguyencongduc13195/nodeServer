@@ -3,9 +3,9 @@ const user_controller = require('../controllers/user');
 const express = require('express');
 const router = express.Router();
 const multer  = require('multer');
-var storage = multer.diskStorage({
+var storageDetail = multer.diskStorage({
     destination: function(req, file, cb) {
-        cb(null,'./public/uploads/products/');
+        cb(null,'./public/uploads/detail-products/');
     },
     filename: function(req, file, cb) {
         cb(null, Date.now() + '_' + file.originalname);
@@ -18,24 +18,46 @@ function extendsionFile(req, file, cb) {
         cb(null, true);
     }
 }
-var upload = multer({ storage: storage, fileFilter: extendsionFile }).single('txtImage');
+var uploadDetail = multer({ storage: storageDetail, fileFilter: extendsionFile }).array('imageDetail',3);
+var upload = multer({ storage: storageDetail, fileFilter: extendsionFile }).single('txtImage');
 router.post('/uploadimage', function (req, res, next) {
     upload(req, res, function (err) {
         if (err) {
-          	return res.json({
-          		succes: false,
-          		msg: err
-          	})
+            return res.json({
+              succes: false,
+              msg: err
+            })
         }  
         let name = req.file.filename
         return res.json({
-          	success: true,
-          	name: name
+            success: true,
+            name: name
         }); 
-  	});     
+    });     
+});
+router.post('/upload-images-detail', function (req, res, next) {
+    uploadDetail(req, res, function (err) {
+        if (err) {
+            return res.json({
+              succes: false,
+              msg: err
+            })
+        }  
+        var arrayImage = []
+        for (var i = 0; i < req.files.length; i++) {
+           arrayImage.push(req.files[i]['filename']); 
+        }
+        return res.json({
+            success: true,
+            name: arrayImage
+        }); 
+    });     
 });
 router.route('/img/:name').get(controller.getNameImage);
+router.route('/images-detail/:name').get(controller.getDetailNameImage);
 router.route('/delete-image/:name').get(controller.deleteImage);
+router.route('/findProductsByGender/:gender?').get(controller.findProductsByGender);
+router.route('/findProducts/:name?').get(controller.findProductsByUse);
 router.route('/add').post(controller.add);
 router.route('/delete/:id').delete(controller.deleteProduct);
 router.route('/update/:id').put(controller.update);

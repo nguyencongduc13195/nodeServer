@@ -10,7 +10,6 @@ const productRouter = require('./routes/product');
 const orderRouter = require('./routes/order');
 const userRouter = require('./routes/user');
 const brandRouter = require('./routes/brand');
-const authorRouter = require('./routes/author');
 const app = express();
 app.use(cors());
 app.use(express.static(path.join(__dirname, 'public')));
@@ -25,7 +24,6 @@ app.use('/api/product', productRouter);
 app.use('/api/order', orderRouter);
 app.use('/api/user', userRouter);
 app.use('/api/brand', brandRouter);
-app.use('/api/author', authorRouter);
 mongoose.connect('mongodb://root:123456789@ds237967.mlab.com:37967/meanecom',{useMongoClient:true});
 
 app.listen(port, ()=>{

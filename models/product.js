@@ -23,6 +23,9 @@ var productSchema = new mongoose.Schema({
 		type:String,
 		default:''
 	},
+	image_Detail:{
+		type: Array
+	},	
 	price: {
 		required: true,
 		type: Number
@@ -39,12 +42,20 @@ var productSchema = new mongoose.Schema({
 		type: mongoose.Schema.Types.ObjectId,
 		ref: 'Brand'
 	},
-	writer_name:{
-		type: String,
+	tag_array:{
+		type: Array,
 		required: true
 	},
-	writer_slug: String
-	,
+	gender:{
+		name: String,
+		slug: String
+	},
+	color:{
+		type: Array
+	},
+	size:{
+		type: Array
+	},
 	status: {
 		type: Boolean,
 		default: true

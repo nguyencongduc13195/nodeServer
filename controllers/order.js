@@ -59,7 +59,8 @@ exports.add = (req, res)=>{
 	});
 	let order_item = ({
 		quantity: req.body.txtQuantity,
-		slug: req.body.txtSlug
+		slug: req.body.txtSlug,
+		color: req.body.txtColor
 	});
 	order.orderItem.push(order_item);
 	order.save((err, success)=>{
