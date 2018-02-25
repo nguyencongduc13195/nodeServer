@@ -33,6 +33,88 @@ exports.findProductsByGender = (req, res)=>{
 	  	});
 	});
 }
+exports.findProductsBySize = (req, res)=>{
+	if (!req.params.size) {
+      	return res.json({
+        	success: false,
+        	msg: 'Vui lòng nhập kích cỡ.'
+      	});
+    }
+    model.find({size: req.params.size}).exec((err, data)=>{
+	    if (err) {
+	      	return res.json({
+	        	success: false,
+	        	msg: err
+	      	});
+	    }
+	    if(data.length<=0){
+	    	return res.json({
+	        	success: false,
+	        	msg: 'Không có sản phẩm.'
+	      	});
+	    }
+	    return res.json({
+	    	success: true,
+	    	data: data
+	  	});
+	});
+}
+exports.findProductsByColor = (req, res)=>{
+	if (!req.params.color) {
+      	return res.json({
+        	success: false,
+        	msg: 'Vui lòng nhập màu sắc.'
+      	});
+    }
+    model.find({color: req.params.color}).exec((err, data)=>{
+	    if (err) {
+	      	return res.json({
+	        	success: false,
+	        	msg: err
+	      	});
+	    }
+	    if(data.length<=0){
+	    	return res.json({
+	        	success: false,
+	        	msg: 'Không có sản phẩm.'
+	      	});
+	    }
+	    return res.json({
+	    	success: true,
+	    	data: data
+	  	});
+	});
+}
+exports.findProductsByPrice = (req, res)=>{
+	if (!req.params.price) {
+      	return res.json({
+        	success: false,
+        	msg: 'Vui lòng nhập giá tiền.'
+      	});
+    }
+    model.find(
+    	{$and:[
+    		{promotion_price: {$gte:req.params.price}},
+    		{promotion_price: {$lt:20000000}}
+    	]}).sort({promotion_price: 1}).exec((err, data)=>{
+	    if (err) {
+	      	return res.json({
+	        	success: false,
+	        	msg: err
+	      	});
+	    }
+	    if(data.length<=0){
+	    	return res.json({
+	        	success: false,
+	        	msg: 'Không có sản phẩm.'
+	      	});
+	    }
+	    return res.json({
+	    	success: true,
+	    	data: data
+	  	});
+	});
+}
 exports.findProductsByUse = (req, res)=>{
 	if (!req.params.name) {
       	return res.json({
