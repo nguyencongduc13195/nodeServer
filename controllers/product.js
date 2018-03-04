@@ -260,6 +260,32 @@ exports.searchItem = (req, res)=>{
         });
     });
 }
+exports.searchItemInNavbar = (req, res)=>{
+    if(!req.params.search){
+        return res.json({
+            success: false,
+            msg:'Vui lòng nhập từ khóa.'
+        });
+    }
+    model.find({$text: {$search: req.params.search}}).limit(3).exec((err, data)=>{
+        if(err){
+            return res.json({
+                success: false,
+                err: err
+            });
+        }
+        if(data.length <=0){
+            return res.json({
+                success: false,
+                msg: 'Không có sản phẩm'
+            });
+        }
+        return res.json({
+            success: true,
+            data: data
+        });
+    });
+}
 exports.updateBrand = (req, res)=>{
 	if(!req.params.id){
 		return res.json({

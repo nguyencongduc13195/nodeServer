@@ -80,5 +80,6 @@ router.route('/addreview/:id').post(user_controller.checkAuthenticate, controlle
 router.route('/related/:id?').get(controller.relatedProduct);
 router.route('/diffirent/:id?').get(controller.diffirentProduct);
 router.route('/search/:search?').get(controller.searchItem);
+router.route('/search-navbar/:search?').get(controller.searchItemInNavbar);
 
 module.exports = router;
