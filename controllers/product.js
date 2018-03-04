@@ -40,7 +40,8 @@ exports.findProductsBySize = (req, res)=>{
         	msg: 'Vui lòng nhập kích cỡ.'
       	});
     }
-    model.find({size: req.params.size}).exec((err, data)=>{
+    let params = req.params.size.split(',');
+    model.find({size:{$all:params}}).exec((err, data)=>{
 	    if (err) {
 	      	return res.json({
 	        	success: false,
@@ -66,7 +67,38 @@ exports.findProductsByColor = (req, res)=>{
         	msg: 'Vui lòng nhập màu sắc.'
       	});
     }
-    model.find({color: req.params.color}).exec((err, data)=>{
+    let params = req.params.color.split(',');
+    model.find({color: {$all:params}}).exec((err, data)=>{
+	    if (err) {
+	      	return res.json({
+	        	success: false,
+	        	msg: err
+	      	});
+	    }
+	    if(data.length<=0){
+	    	return res.json({
+	        	success: false,
+	        	msg: 'Không có sản phẩm.'
+	      	});
+	    }
+	    return res.json({
+	    	success: true,
+	    	data: data
+	  	});
+	});
+}
+exports.findProductsByColorAndSize = (req, res)=>{
+	if(req.query.color){
+    	var paramsColor = req.query.color.split(',');
+	}
+	if(req.query.size){
+    	var paramsSize = req.query.size.split(',');
+	}
+    model.find(
+    	{$and:[
+    		{color: {$all:paramsColor}},
+    		{size:{$all:paramsSize}}
+    	]}).exec((err, data)=>{
 	    if (err) {
 	      	return res.json({
 	        	success: false,

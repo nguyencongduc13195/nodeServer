@@ -59,6 +59,7 @@ router.route('/delete-image/:name').get(controller.deleteImage);
 router.route('/findProductsByGender/:gender?').get(controller.findProductsByGender);
 router.route('/findProductsBySize/:size?').get(controller.findProductsBySize);
 router.route('/findProductsByColor/:color?').get(controller.findProductsByColor);
+router.route('/findProductsByColorAndSize').get(controller.findProductsByColorAndSize);
 router.route('/findProductsByPrice/:price?').get(controller.findProductsByPrice);
 router.route('/findProducts/:name?').get(controller.findProductsByUse);
 router.route('/add').post(controller.add);
